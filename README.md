@@ -28,6 +28,30 @@ By _Yuhang Song\*_, _Beren Millidge_, _Tommaso Salvatori_, _Thomas Lukasiewicz_,
 
 This repo is configured with dev container, so open this project in VSCode and you will be prompted to open it in a dev container, which is with everything setup and the code is ready to run.
 
+catid: I added a requirements.txt file so you can do this in a way that doesn't involve docker containers (which did not work for me...).  I ran this on a Linux server with two 4090 GPUs.
+
+Here's how to get it to run:
+
+```bash
+git clone https://github.com/catid/Prospective-Configuration
+cd Prospective-Configuration
+conda create -n pc python=3.10
+conda activate pc
+pip install -r requirements.txt
+
+mkdir data
+mkdir results
+
+export DATA_DIR=$(pwd)/data
+export RESULTS_DIR=$(pwd)/results
+
+python -c "from torchvision import datasets; import os; [eval(f'datasets.{dataset}')(os.environ.get('DATA_DIR'),download=True) for dataset in ['FashionMNIST']]"
+
+python -c "from torchvision import datasets; import os; [eval(f'datasets.{dataset}')(os.environ.get('DATA_DIR'),download=True) for dataset in ['CIFAR10']]"
+
+python main.py -c nature_cnn_v2/base-ppc
+```
+
 ## 2. <a name='Structureofthecode'></a>Structure of the code
 
 The code is organized as follows:
